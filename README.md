@@ -10,7 +10,7 @@ The first part is covered mainly in the MyDoodleCanvas.swift file, where the tou
 The second part is wrapped in the CognitiveServices.swift file, where two API calls are needed for getting the handwritten text within an image recognized. First you send the image to the textRecognition endpoint and get an operation_location URL back. Because the recognition can take a while, you are able to check back with this URL if the processing is already finished. If the status in the response is SUCCESS, the function just takes the result out of the text array and displays it right under your doodled text. 
 
 <p align="center">
-<img src="https://www.dropbox.com/s/98az80d5k356u6u/doodleRecognition.jpg?dl=1" width="800">
+<img src="https://www.dropbox.com/s/oil95z0eak2wfj4/doodleRecognition.jpeg?dl=1" width="800">
 </p>
 
 If you need a more detailed explanation, just visit my medium posts on this topic. There are three of them and they cover the whole doodling and text recognition API calling super extensively but in a very easy way for you to comprehend.
