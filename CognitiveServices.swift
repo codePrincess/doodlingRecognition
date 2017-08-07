@@ -69,9 +69,9 @@ public typealias FacesResult = ([CognitiveServicesFacesResult]?, NSError?) -> (V
 
 
 /// Fill in your API key here after getting it from https://www.microsoft.com/cognitive-services/en-US/subscriptions
-let CognitiveServicesComputerVisionAPIKey = "487c4f39aefd4616b539ff36a31c1f9e"
-let CognitiveServicesEmotionAPIKey = "2803a29f4801403398b6fbdd8cf96053"
-let CognitiveServicesFacesAPIKey = "66431973a39e4c80b0a35f859830641e"
+let CognitiveServicesComputerVisionAPIKey = "xxx"
+let CognitiveServicesEmotionAPIKey = "xxx"
+let CognitiveServicesFacesAPIKey = "xxx"
 
 /// Caseless enum of available HTTP methods.
 /// See https://dev.projectoxford.ai/docs/services/56f91f2d778daf23d8ec6739/operations/56f91f2e778daf14a499e1fa for details
