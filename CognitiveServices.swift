@@ -10,9 +10,6 @@ import Foundation
 import UIKit
 
 
-
-
-
 /// Lowest level results for both face rectangles and emotion scores. A hit represents one face and its range of emotions.
 public typealias EmotionReplyHit = Dictionary<String, AnyObject>
 /// Wrapper type for an array of hits (i.e. faces). This is the top-level JSON object.
