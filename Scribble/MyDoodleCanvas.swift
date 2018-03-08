@@ -1,6 +1,13 @@
 import Foundation
 import UIKit
+import CoreML
 
+enum RecognizeMode : Int {
+    case cognitiveServiceOCR = 0
+    case localMLModel
+}
+
+@available(iOS 11.0, *)
 public class MyDoodleCanvas: UIImageView {
     
     let pi = CGFloat(Double.pi)
@@ -21,10 +28,10 @@ public class MyDoodleCanvas: UIImageView {
     var currentTextRect : CGRect?
     
     // Parameters
-    let defaultLineWidth:CGFloat = 6
+    let defaultLineWidth:CGFloat = 5
     
     var drawColor: UIColor = UIColor.black
-    var markerColor: UIColor = UIColor.green
+    var markerColor: UIColor = UIColor.lightGray
     
     var eraserColor: UIColor {
         return backgroundColor ?? UIColor.white
@@ -33,13 +40,15 @@ public class MyDoodleCanvas: UIImageView {
     var drawingImage: UIImage?
     var context : CGContext?
     
+    var singleNumberModel : MyNumbersModel?
+    var recognizeMode : RecognizeMode = .cognitiveServiceOCR
+    
     public func setup () {
         
         resetDoodleRect()
         
         lastTouchTimestamp = 0
         
-        if #available(iOS 10.0, *) {
             trackTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true, block: {
                 timer in
                 
@@ -49,7 +58,8 @@ public class MyDoodleCanvas: UIImageView {
                     self.drawDoodlingRect(context: self.context)
                 }
             })
-        } else {}
+        
+        singleNumberModel = MyNumbersModel()
         
     }
     
@@ -66,20 +76,27 @@ public class MyDoodleCanvas: UIImageView {
         context = UIGraphicsGetCurrentContext()
     }
     
+    func updateRecognitionMode (_ mode: RecognizeMode) {
+        recognizeMode = mode
+        
+        switch recognizeMode {
+        case .cognitiveServiceOCR:
+            print("MODE CHANGED: cognitive services OCR is active")
+        case .localMLModel:
+            print("MODE CHANGED: local ML is active - numbers only")
+        }
+    }
+    
     
     override public func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         guard let touch = touches.first else {
             return
         }
-        
-        
-        
+    
         lastTouchTimestamp = Date().timeIntervalSince1970
         
         //print(touch.azimuthUnitVector(in: self))
-        
-        
         
         
         // Draw previous image into context
@@ -97,9 +114,7 @@ public class MyDoodleCanvas: UIImageView {
             drawStroke(context: context, touch: touch)
         }
         
-        
         //drawStroke(context: context, touch: touch)
-        
         
         /*
          if let predictedTouches = event?.predictedTouches(for: touch) {
@@ -145,7 +160,7 @@ public class MyDoodleCanvas: UIImageView {
             
             //pencilTexture.setStroke()
             
-            UIColor.darkGray.setStroke()
+            UIColor.black.setStroke()
             
             // Configure line
             context!.setLineWidth(lineWidth)
@@ -203,7 +218,7 @@ public class MyDoodleCanvas: UIImageView {
         DispatchQueue.main.async {
             let label = UILabel(frame: self.currentTextRect!)
             print(label.frame)
-            label.text = text.characters.count > 0 ? text : "Text not recognized"
+            label.text = text.count > 0 ? text : "Text not recognized"
             label.font = UIFont(name: "Helvetica Neue", size: 9)
             self.addSubview(label)
         }
@@ -283,11 +298,21 @@ public class MyDoodleCanvas: UIImageView {
     }
     
     func fetchOCRText () {
-        let manager = CognitiveServices()
-        
         let ocrImage = image!.crop(rect: ocrImageRect!)
         
-        manager.retrieveTextOnImage(ocrImage) {
+        switch recognizeMode {
+        case .cognitiveServiceOCR:
+            recognizeWithCognitiveServiceOCR(ocrImage)
+        case .localMLModel:
+            recognizeWithLocalModel(ocrImage)
+            break
+        }
+    }
+    
+    func recognizeWithCognitiveServiceOCR(_ image: UIImage) {
+        let manager = CognitiveServices()
+        
+        manager.retrieveTextOnImage(image) {
             operationURL, error in
             
             if #available(iOS 10.0, *) {
@@ -309,15 +334,77 @@ public class MyDoodleCanvas: UIImageView {
                         } else {
                             self.addLabelForOCR(text: "No text for writing")
                         }
-                        
                     })
-                    
                 }
             } else {
                 // Fallback on earlier versions
             }
-            
         }
+    }
+    
+    func recognizeWithLocalModel(_ image: UIImage) {
+        if let data = generateMultiArrayFrom(image: image) {
+            
+            guard let modelOutput = try? singleNumberModel?.prediction(input: data) else {
+                print("uhoh error happend!")
+                return
+            }
+            
+            if let result = modelOutput?.classLabel {
+                print(result)
+                self.addLabelForOCR(text: "\(result)")
+            } else {
+                print("no result available")
+            }
+        }
+    }
+    
+    func generateMultiArrayFrom(image: UIImage) -> MLMultiArray? {
+        
+        guard let data = try? MLMultiArray(shape: [8,8], dataType: .double) else {
+            print("uhoh - error on creating the multiarray")
+            return nil
+        }
+        
+        /*let imageDataArray : [[Double]] = [[0,0,0,16,12,0,0,0],
+                                  [0,0,0,16,16,0,0,0],
+                                  [0,16,0,3,16,0,0,0],
+                                  [0,0,0,0,16,0,0,0],
+                                  [0,0,0,0,16,0,0,0],
+                                  [0,0,0,0,16,0,0,0],
+                                  [0,0,0,0,16,0,0,0],
+                                  [0,0,0,0,16,0,0,0]]
+         */
+        
+        let hTileWidth = image.size.width / 8
+        let vTileWidth = image.size.height / 8
+        
+        var xPos : CGFloat = 0
+        var yPos : CGFloat = 0
+        
+        for rowIndex in 0...7 {
+            for colIndex in 0...7 {
+                
+                //cut the image part at the certain coordinates
+                let imageRect = CGRect(x: xPos, y: yPos, width: hTileWidth, height: vTileWidth)
+                let imageRef: CGImage = image.cgImage!.cropping(to: imageRect)!
+                let cutImage: UIImage = UIImage(cgImage: imageRef)
+                
+                let avgColor = cutImage.areaAverage()
+                var grayscale: CGFloat = 0
+                var alpha: CGFloat = 0
+                avgColor.getWhite(&grayscale, alpha: &alpha)
+                print("grey at [\(rowIndex)/\(colIndex)] : \(grayscale)")
+                
+                xPos += hTileWidth
+                
+                data[rowIndex*8 + colIndex] = NSNumber(floatLiteral: Double(grayscale))
+            }
+            xPos = 0
+            yPos += vTileWidth
+        }
+        
+        return data
     }
 }
 

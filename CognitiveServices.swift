@@ -185,7 +185,7 @@ public class CognitiveServices: NSObject {
      - parameter completion: Callback closure.
      */
     public func retrievePlausibleTagsForImage(_ image: UIImage, _ suggestedConfidence: Double, completion: @escaping CognitiveServicesTagsResult) {
-        assert(CognitiveServicesComputerVisionAPIKey.characters.count > 0, "Please set the value of the API key variable (CognitiveServicesVisualFeaturesAPIKey) before attempting to use the application.")
+        assert(CognitiveServicesComputerVisionAPIKey.count > 0, "Please set the value of the API key variable (CognitiveServicesVisualFeaturesAPIKey) before attempting to use the application.")
         
         print("i got a key - let's do this")
         
@@ -266,7 +266,7 @@ public class CognitiveServices: NSObject {
      - parameter completion: Callback closure.
      */
     public func retrieveTextOnImage(_ image: UIImage, completion: @escaping (String?, NSError?) -> ()) {
-        assert(CognitiveServicesComputerVisionAPIKey.characters.count > 0, "Please set the value of the API key variable (CognitiveServicesVisualFeaturesAPIKey) before attempting to use the application.")
+        assert(CognitiveServicesComputerVisionAPIKey.count > 0, "Please set the value of the API key variable (CognitiveServicesVisualFeaturesAPIKey) before attempting to use the application.")
         
         print("i got a key - let's do this")
         
@@ -320,7 +320,7 @@ public class CognitiveServices: NSObject {
      - parameter completion: Callback closure.
      */
     public func retrieveResultForOcrOperation(_ operationID: String, completion: @escaping CognitiveServicesTagsResult) {
-        assert(CognitiveServicesComputerVisionAPIKey.characters.count > 0, "Please set the value of the API key variable (CognitiveServicesVisualFeaturesAPIKey) before attempting to use the application.")
+        assert(CognitiveServicesComputerVisionAPIKey.count > 0, "Please set the value of the API key variable (CognitiveServicesVisualFeaturesAPIKey) before attempting to use the application.")
         
         print("i got a key - let's do this")
         
@@ -399,7 +399,7 @@ public class CognitiveServices: NSObject {
      - parameter completion: Callback closure.
      */
     public func retrievePlausibleEmotionsForImage(_ image: UIImage, completion: @escaping EmotionResult) {
-        assert(CognitiveServicesEmotionAPIKey.characters.count > 0, "Please set the value of the API key variable (CognitiveServicesEmotionAPIKey) before attempting to use the application.")
+        assert(CognitiveServicesEmotionAPIKey.count > 0, "Please set the value of the API key variable (CognitiveServicesEmotionAPIKey) before attempting to use the application.")
         
         print("i got a key - let's do this")
         
@@ -527,7 +527,7 @@ public class CognitiveServices: NSObject {
      - parameter completion: Callback closure.
      */
     public func retrieveFacesForImage(_ image: UIImage, completion: FacesResult?) {
-        assert(CognitiveServicesFacesAPIKey.characters.count > 0, "Please set the value of the API key variable (CognitiveServicesFacesAPIKey) before attempting to use the application.")
+        assert(CognitiveServicesFacesAPIKey.count > 0, "Please set the value of the API key variable (CognitiveServicesFacesAPIKey) before attempting to use the application.")
         
         print("i got a key - let's do this")
         

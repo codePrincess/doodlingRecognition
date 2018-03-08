@@ -25,6 +25,7 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var canvasView: MyDoodleCanvas!
+    @IBOutlet weak var modePicker: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,13 @@ class ViewController: UIViewController {
         canvasView.clearCanvas(true)
     }
     
+    @IBAction func modeValueChanged(_ sender: Any) {
+        canvasView.updateRecognitionMode(RecognizeMode(rawValue: modePicker.selectedSegmentIndex)!)
+    }
+    
+    @IBAction func clearCanvasTaped(_ sender: Any) {
+        canvasView.clearCanvas(false)
+    }
 }
 
 
