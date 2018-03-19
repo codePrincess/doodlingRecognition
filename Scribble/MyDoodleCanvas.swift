@@ -193,7 +193,7 @@ public class MyDoodleCanvas: UIImageView {
         print("\(minX),\(minY),\(maxX-minX),\(maxY-minY)")
         
         ocrImageRect = CGRect(x: minX - inset, y: minY - inset, width: (maxX-minX) + inset*2, height: (maxY-minY) + 2*inset)
-        context!.addRect(ocrImageRect!)
+        //context!.addRect(ocrImageRect!)
         // Draw the stroke
         context!.strokePath()
         
@@ -290,6 +290,7 @@ public class MyDoodleCanvas: UIImageView {
                 for subview in self.subviews {
                     subview.removeFromSuperview()
                 }
+                UIGraphicsGetCurrentContext()?.clear(self.bounds)
             })
         } else {
             image = nil
@@ -314,6 +315,11 @@ public class MyDoodleCanvas: UIImageView {
         
         manager.retrieveTextOnImage(image) {
             operationURL, error in
+            
+            if error != nil {
+                self.addLabelForOCR(text: "Uhoh, error occured :( \n\(error!)")
+                return
+            }
             
             if #available(iOS 10.0, *) {
                 
@@ -387,18 +393,18 @@ public class MyDoodleCanvas: UIImageView {
                 
                 //cut the image part at the certain coordinates
                 let imageRect = CGRect(x: xPos, y: yPos, width: hTileWidth, height: vTileWidth)
-                let imageRef: CGImage = image.cgImage!.cropping(to: imageRect)!
-                let cutImage: UIImage = UIImage(cgImage: imageRef)
+                let cutImage = image.crop(rect: imageRect)
                 
                 let avgColor = cutImage.areaAverage()
                 var grayscale: CGFloat = 0
                 var alpha: CGFloat = 0
                 avgColor.getWhite(&grayscale, alpha: &alpha)
-                print("grey at [\(rowIndex)/\(colIndex)] : \(grayscale)")
                 
                 xPos += hTileWidth
                 
-                data[rowIndex*8 + colIndex] = NSNumber(floatLiteral: Double(grayscale))
+                let alphaAsNumber = NSNumber(integerLiteral: Int(alpha * 16.0))
+                print("[\(rowIndex)/\(colIndex)] : \(alphaAsNumber)")
+                data[rowIndex*8 + colIndex] = alphaAsNumber
             }
             xPos = 0
             yPos += vTileWidth

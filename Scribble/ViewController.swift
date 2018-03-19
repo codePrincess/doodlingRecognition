@@ -47,7 +47,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func clearCanvasTaped(_ sender: Any) {
-        canvasView.clearCanvas(false)
+        canvasView.clearCanvas(true)
     }
 }
 
