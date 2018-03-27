@@ -2,7 +2,7 @@
 
 # Doodle Recognition - with Machine Learning!
 
-This very basic iOS app handles two things quite well:
+This very basic iOS app handles three things quite well:
   - Show you how drawing with the Apple Pencil works on a basic level
   - Show you how handwritten recognition works with Microsoft Cognitive Services
   - Show you how handwritten number recognition works with a self trained CoreML model
