@@ -17,7 +17,7 @@ The second part is wrapped in the CognitiveServices.swift file, where two API ca
 The third part is dealing with recognition of handwritten text - focusing on numbers - with a self trained CoreML model. The big advantage here is that it works completely offline and can be trained in a very customised way. We are using just numbers for now and take a decent Python script to get the model in shape.
 
 <p align="center">
-<img src="https://drive.google.com/uc?id=1cJV4C35ZwGbryZpCbp9j212SOhqRCC9N" width="500">
+<img src="https://drive.google.com/uc?id=1cJV4C35ZwGbryZpCbp9j212SOhqRCC9N" width="800">
 </p>
 
 If you need a more detailed explanation, just visit my medium posts on this topic. There are three of them and they cover the whole doodling and text recognition API calling super extensively but in a very easy way for you to comprehend.
