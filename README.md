@@ -8,6 +8,7 @@ This very basic iOS app handles two things quite well:
   - Show you how handwritten number recognition works with a self trained CoreML model
   
 The first part is covered mainly in the MyDoodleCanvas.swift file, where the touch handling, drawing and triggering of the handwritten OCR is handled.
+
 The second part is wrapped in the CognitiveServices.swift file, where two API calls are needed for getting the handwritten text within an image recognized. First you send the image to the textRecognition endpoint and get an operation_location URL back. Because the recognition can take a while, you are able to check back with this URL if the processing is already finished. If the status in the response is SUCCESS, the function just takes the result out of the text array and displays it right under your doodled text. 
 
 <p align="center">
