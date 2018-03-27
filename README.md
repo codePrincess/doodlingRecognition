@@ -24,7 +24,7 @@ If you need a more detailed explanation, just visit my medium posts on this topi
   - [The Doodling Workshop #1 - Get a grip of your Apple Pencil](https://medium.com/@codeprincess/the-doodling-workshop-1-ae955e351f7b)
   - [The Doodling Workshop #2 - Recognise your handwriting](https://medium.com/@codeprincess/the-doodling-workshop-2-9c763c21c92b)
   - [The Doodling Workshop #3 - The playground is your canvas](https://medium.com/@codeprincess/the-doodling-workshop-3-70d8e360956a)
-  - [The Doodling Workshop #4 - Machine Learning for the noobs](https://medium.com/@codeprincess/the-doodling-workshop-3-70d8e360956a)
+  - [The Doodling Workshop #4 - Machine Learning for the noobs](https://medium.com/@codeprincess/machine-learning-in-ios-for-the-noob-6c2cdd04b00b)
 
 ## Get yourself an API Key
 Keep in mind to get yourself a Cognitive Services Computer Vision API Key to authenticate against the OCR API the app will use. But don’t worry. You’ll have one generated in no time and moreover get a free one for trial.
